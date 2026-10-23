@@ -101,23 +101,49 @@ function Banner() {
       target: "_blank",
       rel: "noopener noreferrer",
       "aria-label": "Abrir el canal de Kick de Adriano Zendejas",
-      className:
-        "banner relative block w-full overflow-hidden border-b border-kick/40 bg-black",
+      className: "banner",
     },
-    h("img", {
-      src: "images/offline.png",
-      alt: "Portada del canal: Adriano Zendejas, @adrianozendejas32 en Instagram, TikTok y Kick",
-      width: 1073,
-      height: 637,
-      fetchpriority: "high",
-      className: "banner-img w-full h-full object-cover",
-    }),
-    // Degradado inferior para que la portada se funda con la página
-    h("div", {
-      className:
-        "absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-base to-transparent pointer-events-none",
-    }),
+    h(
+      "div",
+      { className: "banner-frame" },
+      h("img", {
+        src: "images/offline.png",
+        alt: "Portada del canal: Adriano Zendejas, @adrianozendejas32 en Instagram, TikTok y Kick",
+        width: 1073,
+        height: 637,
+        fetchpriority: "high",
+        className: "banner-img",
+      }),
+    ),
+    h(
+      "span",
+      { className: "banner-tag" },
+      Icon("play_arrow", "!text-lg"),
+      "Ver canal en Kick",
+    ),
   );
+}
+
+// Transición al navegar: barrido verde, salto a la sección y entrada de su contenido
+function goTo(e, href) {
+  const t = document.querySelector(href);
+  if (!t) return;
+  e.preventDefault();
+  const top = t.getBoundingClientRect().top + window.scrollY - 64;
+  if (reduced) return window.scrollTo(0, top);
+  const w = document.getElementById("wipe");
+  gsap
+    .timeline()
+    .set(w, { transformOrigin: "50% 100%" })
+    .to(w, { scaleY: 1, duration: 0.35, ease: "power3.in" })
+    .add(() => window.scrollTo({ top, behavior: "instant" }))
+    .set(w, { transformOrigin: "50% 0%" })
+    .to(w, { scaleY: 0, duration: 0.5, ease: "power3.out" })
+    .from(
+      t.querySelectorAll("h2, .stagger, form"),
+      { y: 30, opacity: 0, duration: 0.6, stagger: 0.07, ease: "power3.out" },
+      "-=0.3",
+    );
 }
 
 function Header() {
@@ -151,7 +177,12 @@ function Header() {
         NAV.map(([href, l]) =>
           h(
             "a",
-            { key: href, href, className: "hover:text-kick transition-colors" },
+            {
+              key: href,
+              href,
+              onClick: (e) => goTo(e, href),
+              className: "hover:text-kick transition-colors",
+            },
             l,
           ),
         ),
@@ -1014,10 +1045,12 @@ function App() {
     });
     return () => ScrollTrigger.getAll().forEach((t) => t.kill());
   }, []);
+
   return h(
     React.Fragment,
     null,
     h("div", { id: "progress" }),
+    h("div", { id: "wipe" }),
     h(Banner),
     h(Header),
     h(

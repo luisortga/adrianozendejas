@@ -153,24 +153,96 @@ select:focus {
 }
 
 /* Portada superior */
+/* Portada compacta con laterales en sombra negra */
 .banner {
-  aspect-ratio: 16 / 10;
-  max-height: 70vh;
+  position: relative;
+  display: block;
+  background: #000;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(83, 252, 24, 0.4);
 }
-@media (min-width: 768px) {
-  .banner {
-    aspect-ratio: 21 / 9;
-  }
+.banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.5s;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(83, 252, 24, 0.28),
+    transparent 65%
+  );
+}
+.banner:hover::before {
+  opacity: 1;
+}
+.banner-frame {
+  position: relative;
+  max-width: 960px;
+  margin: 0 auto;
+  height: clamp(140px, 20vw, 240px);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 20%,
+    #000 80%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 20%,
+    #000 80%,
+    transparent
+  );
 }
 .banner-img {
-  object-position: 50% 35%;
-  animation: banner-settle 1.4s cubic-bezier(0.2, 1, 0.3, 1) both;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+  filter: brightness(0.85);
+  transition:
+    transform 0.8s cubic-bezier(0.2, 1, 0.3, 1),
+    filter 0.5s;
 }
-@keyframes banner-settle {
-  from {
-    transform: scale(1.06);
-    opacity: 0.6;
-  }
+.banner:hover .banner-img {
+  transform: scale(1.05);
+  filter: brightness(1.05) saturate(1.15);
+}
+.banner-tag {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--kick);
+  color: var(--base);
+  font-size: 0.8rem;
+  font-weight: 800;
+  opacity: 0;
+  transform: translate(-50%, 10px);
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+}
+.banner:hover .banner-tag,
+.banner:focus-visible .banner-tag {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* Barrido verde al navegar */
+#wipe {
+  position: fixed;
+  inset: 0;
+  background: var(--kick);
+  transform: scaleY(0);
+  z-index: 80;
+  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
