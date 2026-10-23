@@ -258,3 +258,12 @@ select:focus {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Videos siempre por encima del fondo y de los efectos */
+#videos .stagger {
+  position: relative;
+  z-index: 1;
+}
+#videos iframe {
+  display: block;
+}

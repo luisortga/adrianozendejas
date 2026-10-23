@@ -139,9 +139,18 @@ function goTo(e, href) {
     .add(() => window.scrollTo({ top, behavior: "instant" }))
     .set(w, { transformOrigin: "50% 0%" })
     .to(w, { scaleY: 0, duration: 0.5, ease: "power3.out" })
-    .from(
+    .fromTo(
       t.querySelectorAll("h2, .stagger, form"),
-      { y: 30, opacity: 0, duration: 0.6, stagger: 0.07, ease: "power3.out" },
+      { y: 30, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.6,
+        stagger: 0.07,
+        ease: "power3.out",
+        overwrite: "auto",
+        clearProps: "transform,opacity",
+      },
       "-=0.3",
     );
 }
@@ -1021,27 +1030,41 @@ function App() {
     });
     if (reduced) return;
     // Títulos de sección: entran una vez
-    gsap.utils.toArray(".reveal").forEach((el) =>
-      gsap.from(el, {
-        y: 36,
-        opacity: 0,
-        duration: 0.9,
-        ease: "power3.out",
-        scrollTrigger: { trigger: el, start: "top 85%", once: true },
-      }),
-    );
+    gsap.utils
+      .toArray(".reveal")
+      .forEach((el) =>
+        gsap.fromTo(
+          el,
+          { y: 36, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.9,
+            ease: "power3.out",
+            overwrite: "auto",
+            clearProps: "transform,opacity",
+            scrollTrigger: { trigger: el, start: "top 85%", once: true },
+          },
+        ),
+      );
     // Tarjetas: entrada escalonada por grupo
     ScrollTrigger.batch(".stagger", {
       start: "top 88%",
       once: true,
       onEnter: (b) =>
-        gsap.from(b, {
-          y: 50,
-          opacity: 0,
-          duration: 0.8,
-          stagger: 0.12,
-          ease: "power3.out",
-        }),
+        gsap.fromTo(
+          b,
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.12,
+            ease: "power3.out",
+            overwrite: "auto",
+            clearProps: "transform,opacity",
+          },
+        ),
     });
     return () => ScrollTrigger.getAll().forEach((t) => t.kill());
   }, []);
