@@ -93,6 +93,33 @@ const Eyebrow = (t) =>
   h("p", { className: "text-kick font-semibold text-sm mb-3" }, t);
 
 /* ---------- secciones ---------- */
+function Banner() {
+  return h(
+    "a",
+    {
+      href: KICK,
+      target: "_blank",
+      rel: "noopener noreferrer",
+      "aria-label": "Abrir el canal de Kick de Adriano Zendejas",
+      className:
+        "banner relative block w-full overflow-hidden border-b border-kick/40 bg-black",
+    },
+    h("img", {
+      src: "images/offline.png",
+      alt: "Portada del canal: Adriano Zendejas, @adrianozendejas32 en Instagram, TikTok y Kick",
+      width: 1073,
+      height: 637,
+      fetchpriority: "high",
+      className: "banner-img w-full h-full object-cover",
+    }),
+    // Degradado inferior para que la portada se funda con la página
+    h("div", {
+      className:
+        "absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-base to-transparent pointer-events-none",
+    }),
+  );
+}
+
 function Header() {
   return h(
     "header",
@@ -991,6 +1018,7 @@ function App() {
     React.Fragment,
     null,
     h("div", { id: "progress" }),
+    h(Banner),
     h(Header),
     h(
       "main",
