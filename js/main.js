@@ -217,7 +217,7 @@ function Hero() {
     num = useRef();
   useEffect(() => {
     if (reduced) {
-      num.current.textContent = "898K*";
+      num.current.textContent = "1M+";
       return;
     }
     const ctx = gsap.context(() => {
@@ -240,11 +240,12 @@ function Hero() {
         );
       const o = { n: 0 };
       gsap.to(o, {
-        n: 898,
+        n: 1000,
         duration: 2,
         delay: 0.6,
         ease: "power2.out",
-        onUpdate: () => (num.current.textContent = Math.round(o.n) + "K*"),
+        onUpdate: () => (num.current.textContent = Math.round(o.n) + "K"),
+        onComplete: () => (num.current.textContent = "1M+"),
       });
       // Parallax suave de la foto al hacer scroll
       gsap.to(img.current, {
@@ -361,12 +362,12 @@ function Hero() {
                 className:
                   "font-display text-3xl font-extrabold text-kick leading-none",
               },
-              "898K*",
+              "1M+",
             ),
             h(
               "div",
               { className: "text-xs text-muted mt-1" },
-              "Seguidores aprox. en Kick",
+              "Seguidores en Kick",
             ),
           ),
         ),
@@ -411,37 +412,91 @@ function Hero() {
   );
 }
 
+const SPONSORS = [
+  {
+    name: "Stake México",
+    url: "https://stake.mx/?offer=adriano32&c=Adriano32",
+    logo: "images/stake.png",
+  },
+  {
+    name: "Moon",
+    url: "https://moon.com/es?c=mxvpfis9&offer=adriano32",
+    logo: "images/moon.png",
+  },
+  {
+    name: "KickBot",
+    url: "https://kickbot.com/tips/Adrianozendejas32",
+    logo: "images/kickbot.png",
+  },
+];
+
+function Sponsor({ s, hidden }) {
+  const [failed, setFailed] = useState(false);
+  return h(
+    "a",
+    {
+      href: s.url,
+      target: "_blank",
+      rel: "sponsored noopener noreferrer",
+      tabIndex: hidden ? -1 : 0,
+      "aria-label": "Sponsor: " + s.name,
+      className:
+        "mx-8 shrink-0 flex items-center h-10 opacity-80 hover:opacity-100 hover:scale-110 transition-all",
+    },
+    failed
+      ? h(
+          "span",
+          {
+            className:
+              "font-display text-xl font-extrabold text-kick whitespace-nowrap",
+          },
+          s.name,
+        )
+      : h("img", {
+          src: s.logo,
+          alt: s.name,
+          className: "h-8 md:h-10 w-auto",
+          onError: () => setFailed(true),
+        }),
+  );
+}
+
 function Marquee() {
-  const items = [
-    "IRL",
-    "Viajes",
-    "Comunidad",
-    "Maestro Shifu",
-    "Kick",
-    "Recorridos",
-    "En vivo",
-  ];
-  const row = items.concat(items, items, items);
+  const words = ["IRL", "Viajes", "Comunidad", "Maestro Shifu", "Kick"];
+  const seq = [];
+  words.forEach((w, i) => {
+    seq.push({ w });
+    seq.push({ s: SPONSORS[i % SPONSORS.length] });
+  });
+  const half = seq.concat(seq);
   return h(
     "div",
-    {
-      className: "border-y border-white/5 bg-l1 py-4 overflow-hidden",
-      "aria-hidden": true,
-    },
+    { className: "border-y border-white/5 bg-l1 py-4 overflow-hidden" },
     h(
       "div",
       { className: "marquee" },
-      row.concat(row).map((t, i) =>
+      [0, 1].map((copy) =>
         h(
-          "span",
+          "div",
           {
-            key: i,
-            className:
-              "font-display text-2xl md:text-3xl font-extrabold uppercase px-6 whitespace-nowrap " +
-              (i % 2 ? "outline-text" : "text-white/80"),
+            key: copy,
+            className: "flex shrink-0 items-center",
+            "aria-hidden": copy === 1,
           },
-          t,
-          h("span", { className: "text-kick ml-10" }, "✦"),
+          half.map((it, i) =>
+            it.s
+              ? h(Sponsor, { key: i, s: it.s, hidden: copy === 1 })
+              : h(
+                  "span",
+                  {
+                    key: i,
+                    className:
+                      "font-display text-2xl md:text-3xl font-extrabold uppercase px-6 whitespace-nowrap " +
+                      (i % 4 ? "outline-text" : "text-white/80"),
+                  },
+                  it.w,
+                ),
+          ),
         ),
       ),
     ),
@@ -994,7 +1049,7 @@ function Footer() {
       h(
         "p",
         { className: "text-sm text-muted max-w-md" },
-        "© 2026 · Página de fans no oficial. Estadísticas aproximadas; consulta Kick para datos actuales.",
+        "© 2026 · Página de fans no oficial. Estadísticas aproximadas; consulta Kick para datos actuales. Contiene enlaces de afiliado. Contenido para mayores de 18 años; juega con responsabilidad.",
       ),
       h(
         "div",
