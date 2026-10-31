@@ -506,7 +506,15 @@ function Irl() {
   );
 }
 
-const VIDEOS = ["QOdqYWD2WxA", "USLuOWg0qzw", "9HisVgLPkFk", "v_CBPxIZ3G4"];
+// Cada video de Mux: el "id" es lo que va después de player.mux.com/ en la URL
+const VIDEOS = [
+  { id: "rR8P8mSaKDzz02TsftugTUdI00cQPJX00oy", title: "Video 1 del canal" },
+  { id: "45nuTQ8hcE02eaR2kStqCnyRPzkCwYml8yqrVklaTakc", title: "JAJAJA" },
+  { id: "GMRbVN02Ry38GUD802uqjwOgxMUA01x2kXvkyPuQUGuOSk", title: "BESO" },
+  { id: "ncss9iFkYVRP5DnEW5Wr1rn4o3Tefag2k4X1w7rcFA8", title: "RO" },
+  { id: "sFdRyg8nWSCvkI6FwJ01qewqavtGDghjMSdURndN6R4w", title: "Clip27" },
+  { id: "fn9G2Hr6whVxBhKmeqIoFYcDOhR02BFtNsxugHKqZQuM", title: "Vrgaaa" },
+];
 
 function Videos() {
   return h(
@@ -515,45 +523,52 @@ function Videos() {
       id: "videos",
       className: "max-w-7xl mx-auto px-4 md:px-8 py-20 border-t border-white/5",
     },
-    [
-      h("div", { className: "reveal max-w-2xl mb-10" }, [
-        // Asegúrate de que Eyebrow también use 'h' si es un componente de hyperscript
-        typeof Eyebrow === "function" ? Eyebrow("Videos") : null,
-        h(
-          "h2",
-          {
-            className:
-              "font-display text-3xl md:text-4xl font-extrabold tracking-tight",
-          },
-          "Mira el canal en acción",
-        ),
-      ]),
+    h(
+      "div",
+      { className: "reveal max-w-2xl mb-10" },
+      Eyebrow("Videos"),
       h(
-        "div",
-        { className: "grid sm:grid-cols-2 lg:grid-cols-4 gap-5" },
-        // Mapeamos los videos devolviendo un array limpio de elementos
-        VIDEOS.map((id, i) =>
+        "h2",
+        {
+          className:
+            "font-display text-3xl md:text-4xl font-extrabold tracking-tight",
+        },
+        "Mira el canal en acción",
+      ),
+    ),
+    h(
+      "div",
+      { className: "grid sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6" },
+      VIDEOS.map((v) =>
+        h(
+          "div",
+          { key: v.id, className: "stagger" },
           h(
             "div",
             {
-              key: id,
               className:
-                "stagger aspect-video rounded-xl overflow-hidden bg-l1 border border-kick/40 shadow-[0_0_20px_-6px_rgba(83,252,24,.35)] hover:border-kick hover:shadow-[0_0_28px_-4px_rgba(83,252,24,.55)] transition-all",
+                "aspect-video rounded-xl overflow-hidden bg-l1 border border-kick/40 shadow-[0_0_20px_-6px_rgba(83,252,24,.35)] hover:border-kick hover:shadow-[0_0_28px_-4px_rgba(83,252,24,.55)] transition-all",
             },
             h("iframe", {
-              src: `https://www.youtube.com/embed/${id}`,
-              title: `Video ${i + 1} de Adriano Zendejas`,
+              src:
+                "https://player.mux.com/" +
+                v.id +
+                "?metadata-video-title=" +
+                encodeURIComponent(v.title) +
+                "&video-title=" +
+                encodeURIComponent(v.title),
+              title: v.title,
               className: "w-full h-full border-0",
               loading: "lazy",
               allow:
-                "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
+                "accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;",
               allowFullScreen: true,
-              referrerPolicy: "strict-origin-when-cross-origin",
             }),
           ),
+          h("p", { className: "mt-2 text-sm text-soft" }, v.title),
         ),
       ),
-    ],
+    ),
   );
 }
 
@@ -1030,23 +1045,21 @@ function App() {
     });
     if (reduced) return;
     // Títulos de sección: entran una vez
-    gsap.utils
-      .toArray(".reveal")
-      .forEach((el) =>
-        gsap.fromTo(
-          el,
-          { y: 36, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.9,
-            ease: "power3.out",
-            overwrite: "auto",
-            clearProps: "transform,opacity",
-            scrollTrigger: { trigger: el, start: "top 85%", once: true },
-          },
-        ),
-      );
+    gsap.utils.toArray(".reveal").forEach((el) =>
+      gsap.fromTo(
+        el,
+        { y: 36, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.9,
+          ease: "power3.out",
+          overwrite: "auto",
+          clearProps: "transform,opacity",
+          scrollTrigger: { trigger: el, start: "top 85%", once: true },
+        },
+      ),
+    );
     // Tarjetas: entrada escalonada por grupo
     ScrollTrigger.batch(".stagger", {
       start: "top 88%",
