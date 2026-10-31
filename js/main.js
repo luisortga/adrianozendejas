@@ -508,7 +508,10 @@ function Irl() {
 
 // Cada video de Mux: el "id" es lo que va después de player.mux.com/ en la URL
 const VIDEOS = [
-  { id: "rR8P8mSaKDzz02TsftugTUdI00cQPJX00oy", title: "Video 1 del canal" },
+  {
+    id: "BBA391netlA6BccBs00IWb7NY5C4MbeFiVXfXqHt01SCE",
+    title: "FDKDFSJKFDS",
+  },
   { id: "45nuTQ8hcE02eaR2kStqCnyRPzkCwYml8yqrVklaTakc", title: "JAJAJA" },
   { id: "GMRbVN02Ry38GUD802uqjwOgxMUA01x2kXvkyPuQUGuOSk", title: "BESO" },
   { id: "ncss9iFkYVRP5DnEW5Wr1rn4o3Tefag2k4X1w7rcFA8", title: "RO" },
